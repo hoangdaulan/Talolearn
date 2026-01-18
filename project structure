@@ -1,0 +1,52 @@
+selfStudy/
+├── cmd/
+│   └── server/
+│       └── main.go
+│
+├── internal/
+│   ├── db/
+│   │   └── postgres.go
+│   │
+│   ├── middleware/
+│   │   └── logger.go
+│   │
+│   ├── router/
+│   │   └── router.go
+│   │
+│   └── module/
+│       ├── teacher/
+│       │   ├── teacher.go
+│       │   ├── teacher_repository.go
+│       │   ├── teacher_repository_gorm.go
+│       │   ├── teacher_service.go
+│       │   ├── teacher_handler.go
+│       │   └── teacher_routes.go
+│       │
+│       ├── course/
+│       │   ├── course.go
+│       │   ├── course_repository.go
+│       │   ├── course_repository_gorm.go
+│       │   ├── course_service.go
+│       │   ├── course_handler.go
+│       │   └── course_routes.go
+│       │
+│       ├── student/
+│       │   ├── student.go
+│       │   ├── student_repository.go
+│       │   ├── student_repository_gorm.go
+│       │   ├── student_service.go
+│       │   ├── student_handler.go
+│       │   └── student_routes.go
+│       │
+│       └── enrollment/        (sau)
+│           ├── enrollment.go
+│           ├── enrollment_repository.go
+│           ├── enrollment_repository_gorm.go
+│           └── enrollment_service.go
+│
+├── docker/
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+├── go.mod
+└── go.sum
