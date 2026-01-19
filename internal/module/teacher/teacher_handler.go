@@ -7,11 +7,11 @@ import (
 )
 
 type TeacherHandler struct {
-	repo GormRepository
+	service TeacherService
 }
 
-func NewTeacherHandler(repo GormRepository) *TeacherHandler {
-	return &TeacherHandler{repo: repo}
+func NewTeacherHandler(service TeacherService) *TeacherHandler {
+	return &TeacherHandler{service: service}
 }
 
 func (h *TeacherHandler) CreateTeacher(c *gin.Context) {
@@ -21,7 +21,7 @@ func (h *TeacherHandler) CreateTeacher(c *gin.Context) {
 		return
 	}
 
-	if err := h.repo.Create(&req); err != nil {
+	if _, err := h.service.CreateTeacher(&req); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -36,7 +36,7 @@ func (h *TeacherHandler) GetTeacherByID(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Invalid ID"})
 		return
 	}
-	teacher, err := h.repo.GetByID(uint(id))
+	teacher, err := h.service.GetTeacherByID(uint(id))
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Teacher not found"})
 		return
@@ -47,7 +47,7 @@ func (h *TeacherHandler) GetTeacherByID(c *gin.Context) {
 
 func (h *TeacherHandler) FindTeacherByName(c *gin.Context) {
 	name := c.Query("name")
-	teacher, err := h.repo.FindByName(name)
+	teacher, err := h.service.FindTeacherByName(name)
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Teacher not found"})
 		return
@@ -58,7 +58,7 @@ func (h *TeacherHandler) FindTeacherByName(c *gin.Context) {
 
 func (h *TeacherHandler) GetAllTeachers(c *gin.Context) {
 	var teachers []Teacher
-	teachers, err := h.repo.GetAll()
+	teachers, err := h.service.GetAllTeachers()
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
@@ -80,12 +80,12 @@ func (h *TeacherHandler) UpdateTeacher(c *gin.Context) {
 		return
 	}
 
-	if err := h.repo.UpdatePartial(uint(id), updates); err != nil {
+	if err := h.service.UpdateTeacher(uint(id), updates); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	res, _ := h.repo.GetByID(uint(id))
+	res, _ := h.service.GetTeacherByID(uint(id))
 	c.JSON(200, res)
 }
 
@@ -97,10 +97,10 @@ func (h *TeacherHandler) DeleteTeacher(c *gin.Context) {
 		return
 	}
 
-	if err := h.repo.Delete(uint(id)); err != nil {
+	if err := h.service.DeleteTeacher(uint(id)); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, gin.H{"Deleted": "Successfully"})
+	c.JSON(200, gin.H{"message": "Deleted successfully"})
 }

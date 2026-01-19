@@ -7,11 +7,11 @@ import (
 )
 
 type CategoryHandler struct {
-	repo GormRepository
+	service CategoryService
 }
 
-func NewCategoryHandler(repo GormRepository) *CategoryHandler {
-	return &CategoryHandler{repo: repo}
+func NewCategoryHandler(service CategoryService) *CategoryHandler {
+	return &CategoryHandler{service: service}
 }
 
 func (h *CategoryHandler) CreateCategory(c *gin.Context) {
@@ -21,7 +21,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		return
 	}
 
-	if err := h.repo.Create(&req); err != nil {
+	if err := h.service.CreateCategory(&req); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -37,7 +37,7 @@ func (h *CategoryHandler) GetCategoryByID(c *gin.Context) {
 		return
 	}
 
-	category, err := h.repo.GetByID(uint(id))
+	category, err := h.service.GetCategoryByID(uint(id))
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Category not found"})
 		return
@@ -54,7 +54,7 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	if err := h.repo.Delete(uint(id)); err != nil {
+	if err := h.service.DeleteCategory(uint(id)); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -63,7 +63,7 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 }
 
 func (h *CategoryHandler) GetAllCategories(context *gin.Context) {
-	categories, err := h.repo.GetAll()
+	categories, err := h.service.GetAllCategory()
 	if err != nil {
 		context.JSON(500, gin.H{"error": err.Error()})
 		return

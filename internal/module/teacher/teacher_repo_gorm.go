@@ -12,11 +12,11 @@ func NewGormRepository(db *gorm.DB) *GormRepository {
 	return &GormRepository{db: db}
 }
 
-func (r *GormRepository) Create(teacher *Teacher) error {
+func (r *GormRepository) Create(teacher *Teacher) (*Teacher, error) {
 	if err := r.db.Create(teacher).Error; err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return teacher, nil
 }
 
 func (r *GormRepository) GetByID(id uint) (*Teacher, error) {

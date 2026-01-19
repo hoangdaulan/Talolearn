@@ -17,6 +17,26 @@ func NewService(courseRepo Repository, teacherRepo teacher.Repository) *CourseSe
 	}
 }
 
+func (s *CourseService) CreateCourse(course *Course) error {
+	return s.courseRepo.CreateCourse(course)
+}
+
+func (s *CourseService) GetCourseByID(id uint) (*Course, error) {
+	return s.courseRepo.GetCourseByID(id)
+}
+
+func (s *CourseService) UpdateCourse(id uint, updates map[string]interface{}) error {
+	return s.courseRepo.UpdateCourse(id, updates)
+}
+
+func (s *CourseService) DeleteCourse(id uint) error {
+	return s.courseRepo.DeleteCourse(id)
+}
+
+func (s *CourseService) ListCourses() ([]Course, error) {
+	return s.courseRepo.ListCourses()
+}
+
 func (s *CourseService) AddTeacherToCourse(courseID uint, teacherID uint) error {
 	// Check if the teacher exists
 	_, err := s.teacherRepo.GetByID(teacherID)

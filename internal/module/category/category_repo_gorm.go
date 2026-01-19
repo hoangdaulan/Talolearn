@@ -10,7 +10,7 @@ func NewGormRepository(db *gorm.DB) *GormRepository {
 	return &GormRepository{db: db}
 }
 
-func (r *GormRepository) Create(category *Category) error {
+func (r *GormRepository) CreateCategory(category *Category) error {
 	if err := r.db.Create(category).Error; err != nil {
 		return err
 	}

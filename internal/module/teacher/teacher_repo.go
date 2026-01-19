@@ -1,7 +1,7 @@
 package teacher
 
 type Repository interface {
-	Create(teacher *Teacher) error
+	Create(teacher *Teacher) (*Teacher, error)
 	GetByID(id uint) (*Teacher, error)
 	FindByName(name string) (*[]Teacher, error)
 	GetAll() ([]Teacher, error)

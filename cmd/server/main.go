@@ -27,13 +27,29 @@ func main() {
 	if err != nil {
 		panic("failed to migrate course database")
 	}
+	err = db.AutoMigrate(&course.CourseTeacher{})
+	if err != nil {
+		panic("failed to migrate course_teacher database")
+	}
 
 	r := gin.Default()
 	r.Use(middleware.Logger())
 
-	teacher.TeacherRouter(r, teacher.NewTeacherHandler(*teacher.NewGormRepository(db)))
-	category.CategoryRouter(r, category.NewCategoryHandler(*category.NewGormRepository(db)))
-	course.CourseRouter(r, course.NewCourseHandler(*course.NewGormRepository(db)))
+	categoryRepo := category.NewGormRepository(db)
+	courseRepo := course.NewGormRepository(db)
+	teacherRepo := teacher.NewGormRepository(db)
+
+	categoryService := category.NewCategoryService(categoryRepo)
+	courseService := course.NewService(courseRepo, teacherRepo)
+	teacherService := teacher.NewTeacherService(teacherRepo)
+
+	categoryHandler := category.NewCategoryHandler(*categoryService)
+	courseHandler := course.NewCourseHandler(*courseService)
+	teacherHandler := teacher.NewTeacherHandler(*teacherService)
+
+	course.CourseRouter(r, courseHandler)
+	category.CategoryRouter(r, categoryHandler)
+	teacher.TeacherRouter(r, teacherHandler)
 
 	err = r.Run(":8080")
 	if err != nil {

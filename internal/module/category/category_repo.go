@@ -1,7 +1,7 @@
 package category
 
 type Repository interface {
-	Create(category *Category) error
+	CreateCategory(category *Category) error
 	GetByID(id uint) (*Category, error)
 	GetAll() ([]Category, error)
 	Delete(id uint) error
