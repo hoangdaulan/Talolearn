@@ -70,3 +70,25 @@ func (h *CategoryHandler) GetAllCategories(context *gin.Context) {
 	}
 	context.JSON(200, categories)
 }
+
+func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	var req Category
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.service.UpdateCategory(uint(id), &req); err != nil {
+		c.JSON(500, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(200, req)
+}

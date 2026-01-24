@@ -23,3 +23,7 @@ func (s *CategoryService) GetCategoryByID(id uint) (*Category, error) {
 func (s *CategoryService) DeleteCategory(id uint) error {
 	return s.repo.Delete(id)
 }
+
+func (s *CategoryService) UpdateCategory(id uint, c *Category) interface{} {
+	return s.repo.Update(id, c)
+}

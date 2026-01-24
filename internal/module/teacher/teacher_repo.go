@@ -1,10 +1,11 @@
 package teacher
 
 type Repository interface {
-	Create(teacher *Teacher) (*Teacher, error)
+	Create(teacher *Teacher) error
 	GetByID(id uint) (*Teacher, error)
+	GetByUserID(userID uint) (*Teacher, error)
 	FindByName(name string) (*[]Teacher, error)
-	GetAll() ([]Teacher, error)
-	UpdatePartial(id uint, updates map[string]interface{}) error
+	List() ([]Teacher, error)
+	Update(teacher *Teacher) error
 	Delete(id uint) error
 }

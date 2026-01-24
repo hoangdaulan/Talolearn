@@ -15,18 +15,27 @@ func NewTeacherHandler(service TeacherService) *TeacherHandler {
 }
 
 func (h *TeacherHandler) CreateTeacher(c *gin.Context) {
-	var req Teacher
+	var req TeacherRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(400, gin.H{"error": err.Error(), "message": "Invalid request body"})
 		return
 	}
-
-	if _, err := h.service.CreateTeacher(&req); err != nil {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid user ID"})
+		return
+	}
+	if _, err := h.service.CreateTeacher(uint(id), req.Bio, req.CategoryID); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(201, req)
+	res, err := h.service.GetTeacherByUserID(uint(id))
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(201, res)
 }
 
 func (h *TeacherHandler) GetTeacherByID(c *gin.Context) {
@@ -37,6 +46,23 @@ func (h *TeacherHandler) GetTeacherByID(c *gin.Context) {
 		return
 	}
 	teacher, err := h.service.GetTeacherByID(uint(id))
+	if err != nil {
+		c.JSON(404, gin.H{"error": "Teacher not found"})
+		return
+	}
+
+	c.JSON(200, teacher)
+}
+
+func (h *TeacherHandler) GetTeacherByUserID(c *gin.Context) {
+	userIDStr := c.Param("user_id")
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	teacher, err := h.service.GetTeacherByUserID(uint(userID))
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Teacher not found"})
 		return

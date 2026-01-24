@@ -10,7 +10,7 @@ type CourseService struct {
 	teacherRepo teacher.Repository
 }
 
-func NewService(courseRepo Repository, teacherRepo teacher.Repository) *CourseService {
+func NewCourseService(courseRepo Repository, teacherRepo teacher.Repository) *CourseService {
 	return &CourseService{
 		courseRepo:  courseRepo,
 		teacherRepo: teacherRepo,
@@ -52,7 +52,7 @@ func (s *CourseService) AddTeacherToCourse(courseID uint, teacherID uint) error 
 
 	// Check if the teacher is already assigned to the course
 	if s.courseRepo.IsTeacherInCourse(teacherID) {
-		return errors.New("Teacher has already in this course")
+		return errors.New("Teacher has been already in this course")
 	}
 
 	// Add the teacher to the course

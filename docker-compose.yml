@@ -12,7 +12,7 @@ services:
       DB_HOST: db
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_NAME: todo_db
+      DB_NAME: talolearn12
       DB_PORT: 5432
 
   db:
@@ -22,11 +22,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    container_name: postgres_todo
+    container_name: postgres_talolearn
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todo_db
+      POSTGRES_DB: talolearn12
     ports:
       - "5433:5432"
     volumes:

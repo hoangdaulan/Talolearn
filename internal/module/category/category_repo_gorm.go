@@ -33,6 +33,13 @@ func (r *GormRepository) GetAll() ([]Category, error) {
 	return categories, nil
 }
 
+func (r *GormRepository) Update(id uint, category *Category) error {
+	return r.db.
+		Model(&Category{}).
+		Where("id = ?", id).
+		Updates(category).Error
+}
+
 func (r *GormRepository) Delete(id uint) error {
 	if err := r.db.Delete(&Category{}, id).Error; err != nil {
 		return err

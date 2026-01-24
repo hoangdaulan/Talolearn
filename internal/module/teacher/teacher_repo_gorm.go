@@ -12,16 +12,30 @@ func NewGormRepository(db *gorm.DB) *GormRepository {
 	return &GormRepository{db: db}
 }
 
-func (r *GormRepository) Create(teacher *Teacher) (*Teacher, error) {
+func (r *GormRepository) Create(teacher *Teacher) error {
 	if err := r.db.Create(teacher).Error; err != nil {
-		return nil, err
+		return err
 	}
-	return teacher, nil
+	return nil
 }
 
 func (r *GormRepository) GetByID(id uint) (*Teacher, error) {
 	var teacher Teacher
 	if err := r.db.First(&teacher, id).Error; err != nil {
+		return nil, err
+	}
+	return &teacher, nil
+}
+
+func (r *GormRepository) GetByUserID(userID uint) (*Teacher, error) {
+	var teacher Teacher
+	err := r.db.
+		Preload("User").
+		Preload("Category").
+		Where("user_id = ?", userID).
+		First(&teacher).Error
+
+	if err != nil {
 		return nil, err
 	}
 	return &teacher, nil
@@ -38,7 +52,7 @@ func (r *GormRepository) FindByName(name string) (*[]Teacher, error) {
 	return &teacher, nil
 }
 
-func (r *GormRepository) GetAll() ([]Teacher, error) {
+func (r *GormRepository) List() ([]Teacher, error) {
 	var teachers []Teacher
 	if err := r.db.Find(&teachers).Error; err != nil {
 		return nil, err
@@ -46,11 +60,8 @@ func (r *GormRepository) GetAll() ([]Teacher, error) {
 	return teachers, nil
 }
 
-func (r *GormRepository) UpdatePartial(id uint, updates map[string]interface{}) error {
-	return r.db.
-		Model(&Teacher{}).
-		Where("id = ?", id).
-		Updates(updates).Error
+func (r *GormRepository) Update(teacher *Teacher) error {
+	return r.db.Save(teacher).Error
 }
 
 func (r *GormRepository) Delete(id uint) error {
